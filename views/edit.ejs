@@ -41,7 +41,8 @@
     <h1 class="text-4xl font-semibold mb-6 text-center text-custom-blue">Edit Pasien</h1>
 
     <!-- Form Edit Pasien -->
-    <form action="/edit/<%= pasien.id %>" method="POST" enctype="multipart/form-data">
+    <form action="/edit/<%= pasien.id %>?_method=PUT" method="POST" enctype="multipart/form-data">
+
       <div class="bg-white p-6 rounded-lg shadow-md">
         
         <!-- Nama Pasien -->

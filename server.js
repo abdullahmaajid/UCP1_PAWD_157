@@ -131,9 +131,8 @@ app.get('/edit/:id', (req, res) => {
 app.put('/edit/:id', upload.single('foto'), (req, res) => {
   const { id } = req.params;
   const { nama, alamat, keterangan } = req.body;
-  const foto = req.file ? req.file.buffer : null; // Jika ada file, simpan dalam buffer
+  const foto = req.file ? req.file.buffer : null;
 
-  // Validasi input
   if (!nama || !alamat || !keterangan) {
     return res.status(400).json({ message: 'Semua field harus diisi!' });
   }
@@ -151,7 +150,6 @@ app.put('/edit/:id', upload.single('foto'), (req, res) => {
       return res.status(500).json({ message: 'Terjadi kesalahan dalam mengupdate pasien.', error: err });
     }
 
-    // Kirim respons JSON setelah berhasil update
     res.status(200).json({
       message: 'Data pasien berhasil diupdate.',
       updatedData: {
@@ -164,6 +162,7 @@ app.put('/edit/:id', upload.single('foto'), (req, res) => {
     });
   });
 });
+
 
 // Route untuk menghapus pasien (DELETE)
 app.delete('/delete/:id', (req, res) => {
