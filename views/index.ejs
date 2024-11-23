@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daftar Pasien</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .bg-custom-blue {
+            background-color: #1976d2; /* Biru biasa */
+        }
+
+        .text-custom-blue {
+            color: #1976d2;
+        }
+
+        .border-custom-blue {
+            border-color: #1976d2;
+        }
+
+        .hover-bg-blue {
+            background-color: #1565c0; /* Biru hover */
+        }
+
+        .btn-minimal:hover {
+            background-color: #1565c0;
+            color: #fff;
+        }
+
+        .transition {
+            transition: all 0.3s ease;
+        }
+
+        /* Pastikan tombol tetap di bawah */
+        .card-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 100%;
+        }
+
+        .card-content {
+            flex-grow: 1;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-100 text-gray-800 font-sans">
+
+    <!-- Container utama -->
+    <div class="container mx-auto p-6">
+
+        <!-- Judul -->
+        <h1 class="text-3xl font-semibold mb-6 text-center text-custom-blue">Daftar Pasien</h1>
+
+        <!-- Input Pencarian -->
+        <div class="mb-6">
+            <input type="text" id="searchInput" placeholder="Cari nama pasien..."
+                class="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-custom-blue transition"
+                oninput="filterPasien()">
+        </div>
+
+        <!-- Grid untuk daftar pasien dan form tambah pasien -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+
+            <!-- Daftar Pasien -->
+            <div class="bg-white p-5 rounded-lg shadow-md h-[745px] overflow-y-auto">
+                <h2 class="text-xl font-semibold mb-4 text-custom-blue">Daftar Pasien</h2>
+                <!-- Daftar Pasien Items -->
+                <div id="pasienList" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <% pasien.sort((a, b) => a.nama.localeCompare(b.nama)).forEach(pasien => { %>
+                    <div class="bg-gray-100 p-4 rounded-lg shadow-sm pasien-item border border-gray-200 transition hover:shadow-lg"
+                        data-nama="<%= pasien.nama.toLowerCase() %>">
+                        <div class="card-container">
+                            <div class="card-content">
+                                <img src="<%= pasien.foto_url %>" alt="<%= pasien.nama %>"
+                                    class="w-full h-32 object-cover rounded mb-3">
+                                <h3 class="text-lg font-medium mb-2 text-custom-blue"><%= pasien.nama %></h3>
+                                <p class="text-sm text-gray-600"><%= pasien.alamat %></p>
+                                <p class="text-sm text-gray-500 mt-1"><%= pasien.keterangan %></p>
+                            </div>
+                            <div class="mt-4 flex justify-between items-center">
+                                <a href="/edit/<%= pasien.id %>"
+                                    class="text-sm bg-custom-blue text-white px-4 py-2 rounded-md btn-minimal transition">
+                                    Edit
+                                </a>
+                                <form action="/delete/<%= pasien.id %>" method="POST" onsubmit="return confirmDelete()">
+                                    <button type="submit"
+                                        class="text-sm bg-red-500 text-white px-4 py-2 rounded-md btn-minimal transition hover:bg-red-600">
+                                        Hapus
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <% }) %>
+                </div>
+            </div>
+
+            <!-- Form Tambah Pasien Baru -->
+            <div class="bg-white p-6 rounded-lg shadow-md h-[745px] overflow-y-auto">
+                <h2 class="text-xl font-semibold mb-4 text-custom-blue">Tambah Pasien Baru</h2>
+                <form action="/api/pasien" method="POST" enctype="multipart/form-data">
+                    <div class="mb-4">
+                        <label for="nama" class="block text-md font-medium text-gray-700">Nama Pasien</label>
+                        <input type="text" id="nama" name="nama"
+                            class="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-custom-blue"
+                            required>
+                    </div>
+                    <div class="mb-4">
+                        <label for="alamat" class="block text-md font-medium text-gray-700">Alamat</label>
+                        <textarea id="alamat" name="alamat"
+                            class="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-custom-blue"
+                            rows="3" required></textarea>
+                    </div>
+                    <div class="mb-4">
+                        <label for="keterangan" class="block text-md font-medium text-gray-700">Keterangan</label>
+                        <input type="text" id="keterangan" name="keterangan"
+                            class="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-custom-blue"
+                            required>
+                    </div>
+                    <div class="mb-4">
+                        <label for="foto" class="block text-md font-medium text-gray-700">Foto Pasien</label>
+                        <input type="file" id="foto" name="foto"
+                            class="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-custom-blue"
+                            required>
+                    </div>
+                    <button type="submit"
+                        class="w-full bg-custom-blue text-white px-6 py-3 rounded-md shadow-md hover:bg-blue-700 transition">
+                        Tambah Pasien
+                    </button>
+                </form>
+            </div>
+
+        </div>
+
+    </div>
+
+    <script>
+        // Fungsi konfirmasi sebelum menghapus
+        function confirmDelete() {
+            return confirm("Anda yakin ingin menghapus pasien ini?");
+        }
+
+        // Fungsi filter pencarian
+        function filterPasien() {
+            const searchValue = document.getElementById("searchInput").value.toLowerCase();
+            const pasienItems = document.querySelectorAll(".pasien-item");
+
+            pasienItems.forEach(item => {
+                const nama = item.getAttribute("data-nama");
+                item.style.display = nama.includes(searchValue) ? "block" : "none";
+            });
+        }
+    </script>
+
+</body>
+
+</html>

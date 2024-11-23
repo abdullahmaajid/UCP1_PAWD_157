@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Edit Pasien</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .bg-custom-blue {
+      background-color: #1976d2; /* Biru biasa */
+    }
+
+    .text-custom-blue {
+      color: #1976d2;
+    }
+
+    .border-custom-blue {
+      border-color: #1976d2;
+    }
+
+    .hover-bg-blue {
+      background-color: #1565c0; /* Biru hover */
+    }
+
+    .btn-minimal:hover {
+      background-color: #1565c0;
+      color: #fff;
+    }
+
+    .transition {
+      transition: all 0.3s ease;
+    }
+  </style>
+</head>
+<body class="bg-gray-100 text-gray-800 font-sans">
+
+  <!-- Container utama -->
+  <div class="container mx-auto p-6">
+
+    <!-- Judul -->
+    <h1 class="text-4xl font-semibold mb-6 text-center text-custom-blue">Edit Pasien</h1>
+
+    <!-- Form Edit Pasien -->
+    <form action="/edit/<%= pasien.id %>" method="POST" enctype="multipart/form-data">
+      <div class="bg-white p-6 rounded-lg shadow-md">
+        
+        <!-- Nama Pasien -->
+        <div class="mb-4">
+          <label for="nama" class="block text-md font-medium text-gray-700">Nama Pasien</label>
+          <input type="text" id="nama" name="nama" value="<%= pasien.nama %>" 
+                 class="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-custom-blue" required>
+        </div>
+
+        <!-- Alamat Pasien -->
+        <div class="mb-4">
+          <label for="alamat" class="block text-md font-medium text-gray-700">Alamat Pasien</label>
+          <textarea id="alamat" name="alamat" rows="4"
+                    class="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-custom-blue" required>
+            <%= pasien.alamat %>
+          </textarea>
+        </div>
+
+        <!-- Keterangan -->
+        <div class="mb-4">
+          <label for="keterangan" class="block text-md font-medium text-gray-700">Keterangan</label>
+          <input type="text" id="keterangan" name="keterangan" value="<%= pasien.keterangan %>"
+                 class="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-custom-blue" required>
+        </div>
+
+        <!-- Foto -->
+        <div class="mb-4">
+          <label for="foto" class="block text-md font-medium text-gray-700">Foto</label>
+          <input type="file" id="foto" name="foto"
+                 class="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-custom-blue">
+          <% if (pasien.foto_url) { %>
+          <div class="mt-4">
+            <img src="<%= pasien.foto_url %>" alt="<%= pasien.nama %>" class="w-32 h-32 object-cover rounded">
+          </div>
+          <% } %>
+        </div>
+
+        <!-- Tombol Simpan -->
+        <div class="mt-6 flex justify-end">
+          <button type="submit"
+                  class="bg-custom-blue text-white px-6 py-2 rounded shadow-md hover:bg-blue-700 transition">
+            Simpan Perubahan
+          </button>
+        </div>
+      </div>
+    </form>
+
+    <!-- Link kembali ke daftar pasien -->
+    <div class="mt-4 text-center">
+      <a href="/"
+         class="bg-custom-blue text-white px-6 py-2 rounded shadow-md hover:bg-blue-700 transition">
+        Kembali ke Daftar Pasien
+      </a>
+    </div>
+  </div>
+
+</body>
+</html>
